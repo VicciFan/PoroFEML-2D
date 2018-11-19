@@ -41,15 +41,16 @@ Config='Axis';
 k=8.4e3; % elastic drained bulk modulus
 g=6.8e3;  % shear modulus
 b=0.707692; % Biot coefficient 
-phi=0.19;  % porosity 
-k_f=2.2e3;  % fluid bulk modulus
+%phi=0.19;  % porosity 
+%k_f=2.2e3;  % fluid bulk modulus
 M=9.18478e3; % Biot Modulus
-overN=1./M-phi/k_f;N=1/overN  % Biot intrinsic Modulus (fluid independent)
+%overN=1./M-phi/k_f;N=1/overN  % Biot intrinsic Modulus (fluid independent)
 k_u=k+b^2*M     % undrained bulk modulus
 perm =0.137549e-3; % permeability value adjusted such that c= k /(mu S)=1 , where S is storage coefficient
 
 mu_f=1; rho=1;
-kappa = perm / mu_f  ;
+kappa = perm / mu_f  ; 
+
 [E_u,nu_u]=Enu_from_kg(k_u,g);
 
 [E,nu]=Enu_from_kg(k,g);

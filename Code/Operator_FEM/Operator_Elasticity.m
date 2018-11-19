@@ -160,7 +160,6 @@ classdef Operator_Elasticity
                         Ue=Ue';
                     end
                     
-                    aux=Lp*B;
                     St=(B*Ue); %%% strain
                     
                     [nr nc]=size(Sig_o(1:3));
@@ -194,7 +193,7 @@ classdef Operator_Elasticity
             dim=obj.EltObject.dim;
             
             % create the right object
-            
+                        
             switch dim
                 case 1
                     
@@ -207,6 +206,7 @@ classdef Operator_Elasticity
                     end
                     
                 case 2
+                    
                     %2 dimensional integration
                     [xeta,Wl]=GaussQuadratureCoefs(IntegrationOrder);
                     

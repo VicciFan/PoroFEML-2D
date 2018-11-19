@@ -132,7 +132,7 @@ end
 
 [Stress,Strain,AvgCoor]=Compute_Stress_And_Strain(mesh,'2D',proplist,3,Usol,ID_array,mySig_o)
 
-Stress
+Stress 
 
 
 

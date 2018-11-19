@@ -10,7 +10,7 @@ switch Geo
         
         L_elas=[La Lb 0. ;...
             Lb La 0.;...
-            0 0  g];
+            0 0  g];  % g here not 2*g 
    
     otherwise
         

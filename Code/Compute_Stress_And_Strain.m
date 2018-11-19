@@ -52,17 +52,19 @@ for e=1:mesh.Nelts
     
    Prop_local=PropertiesList{mesh.matID(e)};
 
-    obj_aux=Operator_Elasticity(local_elt,Prop_local);
-    
-    % get the correct eq number
-    neq_local=ID_Array(local_ien,:);
-        
-    if (issparse(U))
-        Ue=full(U(neq_local(:)))';  
-    else
-        Ue=U(neq_local(:))';       
-    end
+   obj_aux=Operator_Elasticity(local_elt,Prop_local);
      
+    % get the correct eq number
+    neq_local=ID_Array(local_ien,:)';
+    
+    %disp(neq_local);
+    
+    if (issparse(U))
+        Ue=full(U(neq_local(:)));  
+    else
+        Ue=U(neq_local(:));       
+    end
+    
     % initial stress field
     if (nr~=1) % cases where it is different in each element. 
      Sig0=Initial_Stresses(e,:);

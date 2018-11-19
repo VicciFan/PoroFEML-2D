@@ -89,9 +89,9 @@ mySig_o= zeros(mesh.Nelts,3);
 %  
 proplist={L_elas};
  
- [K,ID_array]=AssembleMatrix(mesh,'2D','Elasticity',proplist,3);
+ [K,ID_array]=AssembleMatrix(mesh,'2D','Elasticity',proplist,2);
   
-[Fbody]=AssembleVectorVolumeTerm(mesh,'2D','InitialStress',mySig_o,ID_array,3);
+[Fbody]=AssembleVectorVolumeTerm(mesh,'2D','InitialStress',mySig_o,ID_array,2);
  Fload=Fbody*0.;
  
  
@@ -120,7 +120,7 @@ if (isempty(fix_nonZero)==0)
 end
 
   
-[Stress,Strain,AvgCoor]=Compute_Stress_And_Strain(mesh,'2D',proplist,3,Usol,ID_array,mySig_o,'Gauss')
+[Stress,Strain,AvgCoor]=Compute_Stress_And_Strain(mesh,'2D',proplist,2,Usol,ID_array,mySig_o,'Gauss')
 
  
 Strain
@@ -134,4 +134,18 @@ the_coor(9,:)
 
 %figure(2)
 %voronoi(objN.coor(:,1),objN.coor(:,2))
+
+
+
+udisp =reshape(Usol,[length(ID_array(:,1)) 2 ]);
+udisp(:,1)=Usol(ID_array(:,1));
+udisp(:,2)=Usol(ID_array(:,2));
+
+
+% plot deformed mesh
+%figure(3)
+plotmesh(the_coor,connect,[.2 .2 .2],'w')
+hold on;
+plotmesh(the_coor+udisp*1e3,connect,[.8 .2 .2],'none')
+
 

@@ -37,7 +37,10 @@ end
 
 % just perturb the location of the middle node
 pert=0.1;
-the_coor(5,:)=the_coor(5,:)+[random('norm',0.,pert) random('norm',0.,pert)]
+the_coor(5,:)=[ 0.4230    0.5371];%the_coor(5,:)+[random('norm',0.,pert) random('norm',0.,pert)]
+
+
+  
 
 % simple grid plot (note should work for all linear-like mesh) .... very
 % naive, lots of duplicates.... should be a loop on mesh edges.
@@ -45,9 +48,7 @@ the_coor(5,:)=the_coor(5,:)+[random('norm',0.,pert) random('norm',0.,pert)]
  for e=1:ne_t
      line(the_coor(connect(e,:),1),the_coor(connect(e,:),2)); hold on;
  end 
- 
- 
- 
+
  
 mesh=FEmesh(the_coor,connect);
 
@@ -59,9 +60,8 @@ g=3.1e3;
  L_elas=Elastic_Isotropic_Stiffness(k,g,'PlaneStrain');
  
 % Elasticity problem  1D plane-strain axisymmetry 
-% ProblemType='Elasticity';
-Config='2D';
 
+Config='2D';
  
 % impose displacement .... block bottom y_dof 
 kti=find(the_coor(:,2)==0.);
@@ -102,13 +102,14 @@ mySig_o= zeros(mesh.Nelts,3);
 %  
 proplist={L_elas};
  
- [K,ID_array]=AssembleMatrix(mesh,'2D','Elasticity',proplist,3);
+[K,ID_array]=AssembleMatrix(mesh,'2D','Elasticity',proplist,2);
   
-[Fbody]=AssembleVectorVolumeTerm(mesh,'2D','InitialStress',mySig_o,ID_array,3);
- Fload=Fbody*0.;
- 
+[Fbody]=AssembleVectorVolumeTerm(mesh,'2D','InitialStress',mySig_o,ID_array,2);
+Fload=Fbody*0.;
  
 [eq_free,fix_nonZero,eq_fix]=PrepareDirichletBC(Imp_displacement,ID_array);
+
+
 
 if (isempty(fix_nonZero))
     Ur=K(eq_free,eq_free)\(Fbody(eq_free)+Fload(eq_free));
@@ -117,11 +118,12 @@ else
     for imp=1:length(fix_nonZero)
         eq_fix_nonZero=[eq_fix_nonZero ; ID_array(Imp_displacement(fix_nonZero(imp),1),Imp_displacement(fix_nonZero(imp),2)) ];
     end
-    %  disp(eq_fix_nonZero);
-    %  disp(size(obj.Imp_displacement(fix_nonZero,3)));
+      disp(eq_fix_nonZero);
+      disp(size(Imp_displacement(fix_nonZero,3)));
     F_disp=-K(eq_free,eq_fix_nonZero)*Imp_displacement(fix_nonZero,3);
     Ur=K(eq_free,eq_free)\(Fbody(eq_free)+Fload(eq_free)+F_disp);
 end
+
 
 % glue back solution for all nodes
 Usol(eq_free)=Ur;
@@ -132,11 +134,10 @@ if (isempty(fix_nonZero)==0)
     Usol(eq_fix_nonZero)=Imp_displacement(fix_nonZero,3);
 end
 
-  
-[Stress,Strain,AvgCoor]=Compute_Stress_And_Strain(mesh,Config,proplist,3,Usol,ID_array,mySig_o,'Gauss')
+
+[Stress,Strain,AvgCoor]=Compute_Stress_And_Strain(mesh,Config,proplist,2,Usol,ID_array,mySig_o,'Gauss');
 
  
-
 Strain
 
 % check that displacement solution of the mid nodes is indeed equal to its
@@ -149,3 +150,20 @@ the_coor(5,:)
 %figure(2)
 %voronoi(objN.coor(:,1),objN.coor(:,2))
 
+
+%%
+e=1;
+ 
+    kt=find(mesh.conn(e,:)~=-1);
+    local_ien= mesh.conn(e,kt);
+    
+    mycoor=mesh.XY(local_ien,:);
+
+ local_elt=Element_Qua4('2D',mycoor,local_ien);
+
+    neq_local=ID_array(local_ien,:)';
+
+    Ue=Usol(neq_local(:))
+    
+
+    

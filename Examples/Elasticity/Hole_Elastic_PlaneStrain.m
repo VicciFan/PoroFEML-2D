@@ -115,8 +115,9 @@ mySig_o= zeros(mesh.Nelts,3);  % 4 components in 2D axi-symmetry, 3 in plane-str
  [K,ID_array]=AssembleMatrix(mesh,'2D','Elasticity',proplist,3);
  
    
-%%  
-[Fload]=AssembleVector(mesh,'2D','BoundaryLoads',Boundary_loads,ID_array,3);
+ 
+
+[Fload]=AssembleVectorBoundaryTerm(mesh,'2D','BoundaryLoads',Boundary_loads,ID_array,3);
 
 Fbody=Fload;
 %% solution of the system
